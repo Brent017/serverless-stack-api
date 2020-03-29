@@ -1,6 +1,6 @@
 import uuid from "uuid";
 import AWS from "aws-sdk";
-
+AWS.config.update({ region: "us-east-2" });
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 export function main(event, context, callback) {
@@ -19,7 +19,7 @@ export function main(event, context, callback) {
     // - 'createdAt': current Unix timestamp
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      noteId: uuid.v1(),
+      date: uuid.v1(),
       content: data.content,
       attachment: data.attachment,
       createdAt: Date.now()
@@ -35,6 +35,8 @@ export function main(event, context, callback) {
 
     // Return status code 500 on error
     if (error) {
+      console.log(error);
+
       const response = {
         statusCode: 500,
         headers: headers,
